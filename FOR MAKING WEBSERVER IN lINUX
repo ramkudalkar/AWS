@@ -1,0 +1,17 @@
+FOR MAKING WEBSERVER
+
+For starting up a webserver with instance launch, you can use user-data as below (Eg: for Amazon Linux AMI):
+
+#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+usermod -a -G apache ec2-user
+chown -R ec2-user:apache /var/www
+chmod 2775 /var/www
+find /var/www -type d -exec chmod 2775 {} \;
+find /var/www -type f -exec chmod 0664 {} \;
+cd /var/www/html
+echo "<html><body><p><b>Hello from EC2</b></p></body></html>" >> index.html
+Do note that for the above to work, the instance will need internet access when it launches. This can be via direct public IP association (i.e. Subnet setting) or options like NAT Gateway etc.
